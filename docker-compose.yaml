@@ -1,0 +1,45 @@
+version: "3.6"
+services:
+  # vue:
+  #   container_name: my_frontend
+  #   image: node:lts
+  #   working_dir: /usr/src/app/frontend
+  #   entrypoint: /bin/sh
+  #   ports:
+  #     - "8000:8000"
+  #   volumes:
+  #     - ./frontend/:/usr/src/app/frontend
+  #   tty: true
+  # aa_express:
+  #   network_mode: host
+  #   container_name: aa_express
+  #   build:
+  #     dockerfile: express.dockerfile
+  #     context: .
+  #     args:
+  #       - EXPRESS_PORT=${EXPRESS_PORT}
+  #   restart: always
+  #   environment:
+  #     - EXPRESS_PORT=${EXPRESS_PORT}
+  #     - NODE_ENV=${NODE_ENV:-development}
+  graphql-engine:
+    image: hasura/graphql-engine:v2.34.0
+    network_mode: host
+    ports:
+      - "8080:8080"
+    restart: always
+    environment:
+      HASURA_GRAPHQL_DATABASE_URL: ${POSTGRES_URI}
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "true"
+      
+      HASURA_GRAPHQL_ADMIN_SECRET: adminsecret
+      HASURA_GRAPHQL_CORS_DOMAIN: "*"
+      HASURA_GRAPHQL_UNAUTHORIZED_ROLE: anonymous
+      HASURA_GRAPHQL_SERVER_PORT: ${HASURA_GRAPHQL_SERVER_PORT}
+      HASURA_GRAPHQL_DEV_MODE: "true"
+      HASURA_GRAPHQL_JWT_SECRET: '{"type":"HS256","key":"asgdzhzdhxrfhxfhxfhxfhfghxfbxcgng"}'
+      ACTION_BASE_URL: ${ACTION_BASE_URL}
+      ACCESS_TOKEN_SECRET : ${ACCESS_TOKEN_SECRET}
+      REFRESH_TOKEN_SECRET : ${REFRESH_TOKEN_SECRET}
+volumes:
+  db_data:
